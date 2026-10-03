@@ -1,0 +1,3804 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+
+<title>Zamzzx Vercel Deployer</title>
+
+<style>
+:root{
+    --bg:#000;
+    --panel:#050606;
+    --panel2:#080a0a;
+    --cyan:#00f5ff;
+    --cyan-soft:#8dffff;
+    --white:#f5ffff;
+    --muted:#666d6f;
+    --muted2:#414748;
+    --border:rgba(0,245,255,.15);
+    --border-white:rgba(255,255,255,.07);
+    --green:#20ff9c;
+    --red:#ff526d;
+    --yellow:#ffe36b;
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    background:#000;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:#000;
+    color:var(--white);
+    font-family:
+        "Trebuchet MS",
+        "Arial Rounded MT Bold",
+        Arial,
+        sans-serif;
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    -webkit-user-select:none;
+    user-select:none;
+}
+
+.hidden{
+    display:none !important;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-5;
+    background:
+        radial-gradient(
+            circle at 50% 18%,
+            rgba(0,245,255,.075),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(0,245,255,.035),
+            transparent 38%
+        ),
+        #000;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-4;
+    pointer-events:none;
+    opacity:.12;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0,
+            transparent 4px,
+            rgba(255,255,255,.02) 5px
+        );
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+    width:100%;
+    max-width:760px;
+    min-height:100vh;
+    margin:0 auto;
+    padding:
+        max(14px, env(safe-area-inset-top))
+        13px
+        max(28px, env(safe-area-inset-bottom));
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.012),
+            rgba(255,255,255,.003)
+        ),
+        var(--panel);
+
+    border:1px solid var(--border);
+    border-radius:34px;
+
+    box-shadow:
+        0 0 45px rgba(0,245,255,.045),
+        inset 0 0 0 1px rgba(255,255,255,.01);
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:14%;
+    width:72%;
+    height:1px;
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(0,245,255,.7),
+            transparent
+        );
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px 0;
+}
+
+.login-card{
+    padding:32px;
+}
+
+/* =========================================================
+   VIDEO BANNER
+========================================================= */
+
+.video-banner{
+    position:relative;
+    width:100%;
+    height:245px;
+    overflow:hidden;
+
+    border-radius:28px;
+    border:1px solid rgba(0,245,255,.18);
+
+    background:#020606;
+}
+
+.video-banner video{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+    display:block;
+
+    background:#020606;
+}
+
+.video-overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.02) 0%,
+            rgba(0,0,0,.02) 35%,
+            rgba(0,0,0,.66) 100%
+        );
+}
+
+.video-glow{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:80px;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            rgba(0,0,0,.8)
+        );
+
+    pointer-events:none;
+}
+
+.video-label{
+    position:absolute;
+    left:20px;
+    bottom:17px;
+
+    z-index:4;
+
+    color:#dfffff;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:2.5px;
+
+    text-shadow:
+        0 0 12px rgba(0,245,255,.8);
+}
+
+/* =========================================================
+   LOGIN TEXT
+========================================================= */
+
+.kicker{
+    margin-top:32px;
+
+    text-align:center;
+
+    color:var(--cyan);
+
+    font-size:17px;
+    font-weight:1000;
+    letter-spacing:3px;
+
+    text-shadow:
+        0 0 14px rgba(0,245,255,.5);
+}
+
+.main-title{
+    margin:14px 0 0;
+
+    text-align:center;
+
+    color:#f5ffff;
+
+    font-size:31px;
+    line-height:1.12;
+    font-weight:1000;
+    letter-spacing:1px;
+}
+
+.description{
+    margin:
+        17px auto
+        28px;
+
+    max-width:540px;
+
+    text-align:center;
+
+    color:#62696b;
+
+    font-size:14px;
+    line-height:1.55;
+    font-weight:700;
+}
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.field{
+    margin-bottom:13px;
+}
+
+.input-box{
+    position:relative;
+}
+
+input,
+select{
+    width:100%;
+    height:62px;
+
+    outline:none;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:21px;
+
+    background:#050606;
+
+    color:#f2ffff;
+
+    padding:
+        0 19px;
+
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
+}
+
+input::placeholder{
+    color:#505758;
+}
+
+input:focus,
+select:focus{
+    border-color:
+        rgba(0,245,255,.48);
+
+    background:#070909;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,245,255,.045),
+
+        0 0 25px
+        rgba(0,245,255,.045);
+}
+
+.password-toggle{
+    position:absolute;
+
+    right:9px;
+    top:8px;
+
+    width:46px;
+    height:46px;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:15px;
+
+    background:#090c0c;
+
+    color:#747d7f;
+}
+
+.password-toggle:active{
+    transform:scale(.95);
+}
+
+/* =========================================================
+   MAIN BUTTON
+========================================================= */
+
+.main-button{
+    width:100%;
+    height:64px;
+
+    margin-top:10px;
+
+    border:0;
+    border-radius:22px;
+
+    color:#001415;
+
+    background:
+        linear-gradient(
+            110deg,
+            #00e8ef,
+            #dfffff
+        );
+
+    font-size:16px;
+    font-weight:1000;
+    letter-spacing:.5px;
+
+    box-shadow:
+        0 12px 32px
+        rgba(0,245,255,.1);
+
+    transition:
+        transform .15s,
+        filter .15s,
+        opacity .15s;
+}
+
+.main-button:active{
+    transform:scale(.985);
+}
+
+.main-button:hover{
+    filter:brightness(1.04);
+}
+
+.main-button:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+/* =========================================================
+   CONNECTION STATUS
+========================================================= */
+
+.connection{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:17px;
+
+    color:#525a5c;
+
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.connection-dot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#343a3b;
+}
+
+.connection-dot.green{
+    background:var(--green);
+
+    box-shadow:
+        0 0 12px
+        rgba(32,255,156,.8);
+}
+
+.connection-dot.red{
+    background:var(--red);
+
+    box-shadow:
+        0 0 12px
+        rgba(255,82,109,.7);
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard{
+    padding-top:12px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:10px;
+
+    margin:
+        0 2px
+        13px;
+}
+
+.logo{
+    color:var(--cyan);
+
+    font-size:21px;
+    font-weight:1000;
+    letter-spacing:2px;
+
+    text-shadow:
+        0 0 15px
+        rgba(0,245,255,.4);
+}
+
+.account{
+    max-width:55%;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    padding:
+        9px 12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:14px;
+
+    color:#70797b;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+/* =========================================================
+   DASHBOARD CARD
+========================================================= */
+
+.panel{
+    margin-bottom:13px;
+    padding:19px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:27px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.012),
+            transparent
+        ),
+        var(--panel);
+}
+
+.panel-title{
+    margin:0;
+
+    font-size:21px;
+    font-weight:1000;
+}
+
+.panel-subtitle{
+    margin:
+        6px 0
+        19px;
+
+    color:#5b6264;
+
+    font-size:12px;
+    line-height:1.5;
+}
+
+/* =========================================================
+   UPLOAD
+========================================================= */
+
+.dropzone{
+    min-height:178px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+
+    text-align:center;
+
+    padding:20px;
+
+    border:
+        1px dashed
+        rgba(0,245,255,.23);
+
+    border-radius:23px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,245,255,.035),
+            transparent 60%
+        );
+
+    transition:
+        .2s;
+}
+
+.dropzone.dragging{
+    border-color:var(--cyan);
+
+    background:
+        rgba(0,245,255,.055);
+
+    box-shadow:
+        0 0 30px
+        rgba(0,245,255,.06);
+}
+
+.upload-icon{
+    width:55px;
+    height:55px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:12px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:18px;
+
+    color:var(--cyan);
+
+    font-size:24px;
+
+    box-shadow:
+        0 0 20px
+        rgba(0,245,255,.035);
+}
+
+.upload-title{
+    font-size:15px;
+    font-weight:1000;
+}
+
+.upload-desc{
+    margin-top:6px;
+
+    color:#505759;
+
+    font-size:10px;
+}
+
+.choose-button{
+    margin-top:14px;
+
+    height:40px;
+
+    padding:
+        0 17px;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:14px;
+
+    background:#090c0c;
+
+    color:#9aa2a4;
+
+    font-size:11px;
+    font-weight:900;
+}
+
+.file-info{
+    display:none;
+
+    margin-top:10px;
+
+    padding:13px;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:17px;
+
+    background:#060808;
+}
+
+.file-info.show{
+    display:block;
+}
+
+.file-name{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    color:#d9ffff;
+
+    font-size:12px;
+    font-weight:900;
+}
+
+.file-size{
+    margin-top:4px;
+
+    color:#4e5557;
+
+    font-size:10px;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+
+    margin-top:12px;
+}
+
+.setting-label{
+    display:block;
+
+    margin:
+        0 0
+        7px 5px;
+
+    color:#596062;
+
+    font-size:9px;
+    font-weight:900;
+
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.settings-grid input,
+.settings-grid select{
+    height:57px;
+
+    border-radius:18px;
+
+    font-size:12px;
+}
+
+/* =========================================================
+   OPTION
+========================================================= */
+
+.option{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:11px;
+
+    padding:14px;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:18px;
+
+    background:#050707;
+}
+
+.option strong{
+    display:block;
+
+    font-size:12px;
+}
+
+.option span{
+    display:block;
+
+    margin-top:4px;
+
+    color:#4e5658;
+
+    font-size:9px;
+    line-height:1.4;
+}
+
+.switch{
+    position:relative;
+
+    width:49px;
+    height:28px;
+
+    flex:none;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+
+    border-radius:30px;
+
+    background:#151919;
+
+    border:
+        1px solid
+        #262c2d;
+
+    transition:.2s;
+}
+
+.slider::before{
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    left:3px;
+    top:3px;
+
+    border-radius:50%;
+
+    background:#52595b;
+
+    transition:.2s;
+}
+
+.switch input:checked + .slider{
+    border-color:
+        rgba(0,245,255,.38);
+
+    background:
+        rgba(0,245,255,.09);
+}
+
+.switch input:checked + .slider::before{
+    transform:
+        translateX(21px);
+
+    background:
+        var(--cyan);
+
+    box-shadow:
+        0 0 13px
+        rgba(0,245,255,.6);
+}
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:11px;
+}
+
+.progress-status{
+    color:#666e70;
+
+    font-size:10px;
+}
+
+.progress-number{
+    color:var(--cyan);
+
+    font-size:25px;
+    font-weight:1000;
+}
+
+.progress-track{
+    width:100%;
+    height:10px;
+
+    overflow:hidden;
+
+    border-radius:20px;
+
+    background:#111515;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00aeb8,
+            #00f5ff,
+            #dfffff
+        );
+
+    box-shadow:
+        0 0 17px
+        rgba(0,245,255,.35);
+
+    transition:
+        width .3s ease;
+}
+
+.steps{
+    display:grid;
+    gap:8px;
+
+    margin-top:16px;
+}
+
+.step{
+    display:flex;
+    align-items:center;
+
+    gap:9px;
+
+    color:#414849;
+
+    font-size:9px;
+}
+
+.step-icon{
+    width:21px;
+    height:21px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex:none;
+
+    border:
+        1px solid
+        #262b2c;
+
+    border-radius:50%;
+
+    font-size:8px;
+}
+
+.step.active{
+    color:#aeb7b9;
+}
+
+.step.active .step-icon{
+    color:var(--cyan);
+
+    border-color:
+        rgba(0,245,255,.4);
+
+    box-shadow:
+        0 0 10px
+        rgba(0,245,255,.15);
+}
+
+.step.done{
+    color:var(--green);
+}
+
+.step.done .step-icon{
+    color:var(--green);
+
+    border-color:
+        rgba(32,255,156,.35);
+}
+
+/* =========================================================
+   TERMINAL
+========================================================= */
+
+.terminal{
+    overflow:hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius:19px;
+
+    background:#020404;
+}
+
+.terminal-head{
+    height:37px;
+
+    display:flex;
+    align-items:center;
+
+    gap:5px;
+
+    padding:0 12px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.05);
+}
+
+.terminal-dot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#292e30;
+}
+
+.terminal-name{
+    margin-left:6px;
+
+    color:#4c5456;
+
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.logs{
+    height:180px;
+
+    overflow:auto;
+
+    padding:12px;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size:9px;
+    line-height:1.8;
+}
+
+.log{
+    color:#687173;
+}
+
+.log.info{
+    color:#6be9ef;
+}
+
+.log.success{
+    color:#67e6a9;
+}
+
+.log.error{
+    color:#ff7186;
+}
+
+.log-time{
+    color:#343a3b;
+}
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result-box{
+    display:none;
+
+    padding:17px;
+
+    border:
+        1px solid
+        rgba(32,255,156,.18);
+
+    border-radius:20px;
+
+    background:
+        rgba(32,255,156,.025);
+}
+
+.result-box.show{
+    display:block;
+}
+
+.result-title{
+    color:var(--green);
+
+    font-size:12px;
+    font-weight:1000;
+    letter-spacing:1px;
+}
+
+.result-url{
+    display:block;
+
+    margin-top:8px;
+
+    color:#dfffff;
+
+    font-size:11px;
+
+    line-height:1.5;
+
+    word-break:break-all;
+
+    text-decoration:none;
+}
+
+.result-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+
+    margin-top:13px;
+}
+
+.small-button{
+    height:43px;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:14px;
+
+    background:#090c0c;
+
+    color:#929a9c;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.small-button.primary{
+    background:var(--cyan);
+
+    color:#001314;
+
+    border-color:transparent;
+}
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.history{
+    display:grid;
+    gap:8px;
+}
+
+.history-empty{
+    padding:16px;
+
+    text-align:center;
+
+    color:#3d4446;
+
+    font-size:10px;
+}
+
+.history-item{
+    padding:12px;
+
+    border:
+        1px solid
+        var(--border-white);
+
+    border-radius:16px;
+
+    background:#050707;
+
+    cursor:pointer;
+
+    transition:.15s;
+}
+
+.history-item:active{
+    transform:scale(.99);
+}
+
+.history-project{
+    color:#dfffff;
+
+    font-size:11px;
+    font-weight:900;
+}
+
+.history-url{
+    margin-top:4px;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    color:#555d5f;
+
+    font-size:9px;
+}
+
+.history-time{
+    margin-top:6px;
+
+    color:#363c3e;
+
+    font-size:8px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+    padding:
+        5px 0
+        17px;
+
+    text-align:center;
+
+    color:#2f3536;
+
+    font-size:8px;
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:22px;
+
+    width:min(92%,420px);
+
+    z-index:100;
+
+    padding:13px 15px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:16px;
+
+    background:#080b0b;
+
+    color:#cbd2d3;
+
+    text-align:center;
+
+    font-size:10px;
+    font-weight:900;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transform:
+        translate(-50%,18px);
+
+    transition:.25s;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translate(-50%,0);
+}
+
+.toast.success{
+    color:#8dffca;
+
+    border-color:
+        rgba(32,255,156,.25);
+}
+
+.toast.error{
+    color:#ff9aaa;
+
+    border-color:
+        rgba(255,82,109,.28);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:560px){
+
+    .login-screen{
+        align-items:flex-start;
+    }
+
+    .login-card{
+        margin-top:15px;
+        padding:20px 16px 23px;
+        border-radius:31px;
+    }
+
+    .video-banner{
+        height:250px;
+        border-radius:25px;
+    }
+
+    .main-title{
+        font-size:28px;
+    }
+
+    .kicker{
+        font-size:15px;
+    }
+
+    .description{
+        font-size:13px;
+        margin-bottom:22px;
+    }
+
+    .settings-grid{
+        grid-template-columns:1fr;
+    }
+
+    .panel{
+        padding:16px;
+        border-radius:25px;
+    }
+}
+
+@media(max-height:700px){
+
+    .video-banner{
+        height:185px;
+    }
+
+    .login-card{
+        margin-top:5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =======================================================
+     LOGIN SCREEN
+======================================================= -->
+
+<section
+    id="loginScreen"
+    class="login-screen"
+>
+
+    <div class="card login-card">
+
+        <!-- VIDEO DARI FOLDER YANG SAMA -->
+        <div class="video-banner">
+
+            <video
+                id="bannerVideo"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="auto"
+            >
+                <source
+                    src="./banner.mp4"
+                    type="video/mp4"
+                >
+
+                Browser tidak mendukung video.
+            </video>
+
+            <div class="video-overlay"></div>
+            <div class="video-glow"></div>
+
+            <div class="video-label">
+                ZAMZZX // VERCEL DEPLOY SYSTEM
+            </div>
+
+        </div>
+
+
+        <div class="kicker">
+            WELCOME DEVELOPER
+        </div>
+
+
+        <h1 class="main-title">
+            CONNECT VERCEL
+        </h1>
+
+
+        <p class="description">
+            Masukkan Vercel Token untuk membuka
+            panel deployment website.
+        </p>
+
+
+        <div class="field">
+
+            <div class="input-box">
+
+                <input
+                    id="tokenInput"
+                    type="password"
+                    placeholder="VERCEL TOKEN"
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+
+                <button
+                    id="tokenToggle"
+                    class="password-toggle"
+                    type="button"
+                >
+                    ◉
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="connectButton"
+            class="main-button"
+            type="button"
+        >
+            CONNECT & MASUK
+        </button>
+
+
+        <div class="connection">
+
+            <span
+                id="connectionDot"
+                class="connection-dot"
+            ></span>
+
+            <span id="connectionText">
+                VERCEL DISCONNECTED
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     DASHBOARD
+======================================================= -->
+
+<section
+    id="dashboard"
+    class="dashboard hidden"
+>
+
+    <div class="topbar">
+
+        <div class="logo">
+            ZAMZZX
+        </div>
+
+        <div
+            id="account"
+            class="account"
+        >
+            VERCEL CONNECTED
+        </div>
+
+    </div>
+
+
+    <!-- DEPLOY -->
+
+    <div class="panel">
+
+        <h2 class="panel-title">
+            Deploy Website
+        </h2>
+
+        <p class="panel-subtitle">
+            Upload project kamu dan deploy langsung
+            ke Vercel.
+        </p>
+
+
+        <!-- UPLOAD -->
+
+        <div
+            id="dropzone"
+            class="dropzone"
+        >
+
+            <div class="upload-icon">
+                ↑
+            </div>
+
+            <div class="upload-title">
+                Upload Website
+            </div>
+
+            <div class="upload-desc">
+                HTML, HTM atau ZIP project
+            </div>
+
+            <button
+                id="chooseButton"
+                class="choose-button"
+                type="button"
+            >
+                PILIH FILE
+            </button>
+
+            <input
+                id="fileInput"
+                type="file"
+                accept=".html,.htm,.zip"
+                hidden
+            >
+
+        </div>
+
+
+        <div
+            id="fileInfo"
+            class="file-info"
+        >
+
+            <div
+                id="fileName"
+                class="file-name"
+            >
+                -
+            </div>
+
+            <div
+                id="fileSize"
+                class="file-size"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div class="settings-grid">
+
+            <div>
+
+                <label class="setting-label">
+                    Project Name
+                </label>
+
+                <input
+                    id="projectName"
+                    type="text"
+                    maxlength="80"
+                    placeholder="nama-project"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div>
+
+                <label class="setting-label">
+                    Deploy Target
+                </label>
+
+                <select id="deployTarget">
+
+                    <option value="production">
+                        Production
+                    </option>
+
+                    <option value="preview">
+                        Preview
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div style="margin-top:11px;">
+
+            <label class="setting-label">
+                Team ID — Optional
+            </label>
+
+            <input
+                id="teamId"
+                type="text"
+                placeholder="team_xxxxxxxxx"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- AUTO INDEX -->
+
+        <div class="option">
+
+            <div>
+
+                <strong>
+                    Auto index.html
+                </strong>
+
+                <span>
+                    Membuat index.html apabila ZIP
+                    tidak memilikinya.
+                </span>
+
+            </div>
+
+            <label class="switch">
+
+                <input
+                    id="autoIndex"
+                    type="checkbox"
+                    checked
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+
+        <button
+            id="deployButton"
+            class="main-button"
+            type="button"
+        >
+            DEPLOY SEKARANG
+        </button>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div
+        id="progressPanel"
+        class="panel hidden"
+    >
+
+        <div class="progress-head">
+
+            <div
+                id="progressStatus"
+                class="progress-status"
+            >
+                Preparing...
+            </div>
+
+            <div
+                id="progressNumber"
+                class="progress-number"
+            >
+                0%
+            </div>
+
+        </div>
+
+
+        <div class="progress-track">
+
+            <div
+                id="progressBar"
+                class="progress-bar"
+            ></div>
+
+        </div>
+
+
+        <div class="steps">
+
+            <div
+                id="step1"
+                class="step"
+            >
+                <span class="step-icon">1</span>
+                Prepare project
+            </div>
+
+            <div
+                id="step2"
+                class="step"
+            >
+                <span class="step-icon">2</span>
+                Read project
+            </div>
+
+            <div
+                id="step3"
+                class="step"
+            >
+                <span class="step-icon">3</span>
+                Upload to Vercel
+            </div>
+
+            <div
+                id="step4"
+                class="step"
+            >
+                <span class="step-icon">4</span>
+                Build deployment
+            </div>
+
+            <div
+                id="step5"
+                class="step"
+            >
+                <span class="step-icon">5</span>
+                Deployment ready
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TERMINAL -->
+
+    <div class="panel">
+
+        <div class="terminal">
+
+            <div class="terminal-head">
+
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+
+                <span class="terminal-name">
+                    ZAMZZX DEPLOY TERMINAL
+                </span>
+
+            </div>
+
+
+            <div
+                id="logs"
+                class="logs"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="resultPanel"
+        class="panel hidden"
+    >
+
+        <div class="result-box">
+
+            <div class="result-title">
+                ✓ DEPLOYMENT READY
+            </div>
+
+            <a
+                id="resultUrl"
+                class="result-url"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+            ></a>
+
+
+            <div class="result-buttons">
+
+                <button
+                    id="openButton"
+                    class="small-button primary"
+                    type="button"
+                >
+                    BUKA WEBSITE
+                </button>
+
+                <button
+                    id="copyButton"
+                    class="small-button"
+                    type="button"
+                >
+                    COPY URL
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY -->
+
+    <div class="panel">
+
+        <h2 class="panel-title">
+            Deployment History
+        </h2>
+
+        <p class="panel-subtitle">
+            Riwayat tersimpan secara lokal di browser.
+        </p>
+
+        <div
+            id="history"
+            class="history"
+        ></div>
+
+    </div>
+
+
+    <button
+        id="disconnectButton"
+        class="small-button"
+        type="button"
+        style="width:100%;height:47px;margin-bottom:9px;"
+    >
+        DISCONNECT VERCEL
+    </button>
+
+
+    <div class="footer">
+        ZAMZZX VERCEL DEPLOYER • ONE HTML FILE
+    </div>
+
+</section>
+
+</div>
+
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<!-- =======================================================
+     JSZIP
+     Digunakan hanya untuk membaca ZIP di browser.
+======================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+
+<script>
+"use strict";
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const VERCEL_API =
+    "https://api.vercel.com";
+
+const MAX_UPLOAD_SIZE =
+    4 * 1024 * 1024;
+
+const MAX_FILE_SIZE =
+    2 * 1024 * 1024;
+
+const MAX_FILES =
+    100;
+
+const HISTORY_KEY =
+    "zamzzx_vercel_history_v2";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const state = {
+    token:"",
+    user:null,
+    selectedFile:null,
+    files:[],
+    deployment:null,
+    deploying:false
+};
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const dashboard =
+    document.getElementById("dashboard");
+
+const tokenInput =
+    document.getElementById("tokenInput");
+
+const tokenToggle =
+    document.getElementById("tokenToggle");
+
+const connectButton =
+    document.getElementById("connectButton");
+
+const connectionDot =
+    document.getElementById("connectionDot");
+
+const connectionText =
+    document.getElementById("connectionText");
+
+const account =
+    document.getElementById("account");
+
+const dropzone =
+    document.getElementById("dropzone");
+
+const chooseButton =
+    document.getElementById("chooseButton");
+
+const fileInput =
+    document.getElementById("fileInput");
+
+const fileInfo =
+    document.getElementById("fileInfo");
+
+const fileName =
+    document.getElementById("fileName");
+
+const fileSize =
+    document.getElementById("fileSize");
+
+const projectName =
+    document.getElementById("projectName");
+
+const deployTarget =
+    document.getElementById("deployTarget");
+
+const teamId =
+    document.getElementById("teamId");
+
+const autoIndex =
+    document.getElementById("autoIndex");
+
+const deployButton =
+    document.getElementById("deployButton");
+
+const progressPanel =
+    document.getElementById("progressPanel");
+
+const progressStatus =
+    document.getElementById("progressStatus");
+
+const progressNumber =
+    document.getElementById("progressNumber");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const logs =
+    document.getElementById("logs");
+
+const resultPanel =
+    document.getElementById("resultPanel");
+
+const resultUrl =
+    document.getElementById("resultUrl");
+
+const openButton =
+    document.getElementById("openButton");
+
+const copyButton =
+    document.getElementById("copyButton");
+
+const history =
+    document.getElementById("history");
+
+const disconnectButton =
+    document.getElementById("disconnectButton");
+
+const toast =
+    document.getElementById("toast");
+
+
+/* =========================================================
+   GENERAL HELPERS
+========================================================= */
+
+function sleep(ms){
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+}
+
+
+function showToast(
+    message,
+    type=""
+){
+    toast.textContent =
+        message;
+
+    toast.className =
+        `toast show ${type}`;
+
+    clearTimeout(
+        showToast.timer
+    );
+
+    showToast.timer =
+        setTimeout(
+            () => {
+                toast.className =
+                    "toast";
+            },
+            3200
+        );
+}
+
+
+function formatBytes(bytes){
+
+    if(!Number.isFinite(bytes)){
+        return "0 B";
+    }
+
+    if(bytes < 1024){
+        return `${bytes} B`;
+    }
+
+    if(bytes < 1024 * 1024){
+        return `${(
+            bytes / 1024
+        ).toFixed(1)} KB`;
+    }
+
+    return `${(
+        bytes /
+        (1024 * 1024)
+    ).toFixed(2)} MB`;
+}
+
+
+function slugify(value){
+
+    return String(value)
+        .trim()
+        .toLowerCase()
+        .replace(
+            /[^a-z0-9-_]/g,
+            "-"
+        )
+        .replace(
+            /-+/g,
+            "-"
+        )
+        .replace(
+            /^-|-$/g,
+            ""
+        )
+        .slice(0,80);
+}
+
+
+function escapeHtml(value){
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+function randomSuffix(){
+
+    return Math.random()
+        .toString(36)
+        .slice(2,8);
+}
+
+
+function now(){
+
+    return new Date()
+        .toLocaleTimeString(
+            "id-ID",
+            {
+                hour:"2-digit",
+                minute:"2-digit",
+                second:"2-digit"
+            }
+        );
+}
+
+
+/* =========================================================
+   LOGGING
+========================================================= */
+
+function clearLogs(){
+
+    logs.innerHTML = "";
+}
+
+
+function addLog(
+    message,
+    type="info"
+){
+
+    const line =
+        document.createElement("div");
+
+    line.className =
+        `log ${type}`;
+
+    const time =
+        document.createElement("span");
+
+    time.className =
+        "log-time";
+
+    time.textContent =
+        `[${now()}] `;
+
+    line.appendChild(time);
+
+    line.appendChild(
+        document.createTextNode(
+            message
+        )
+    );
+
+    logs.appendChild(line);
+
+    logs.scrollTop =
+        logs.scrollHeight;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setConnection(
+    type,
+    message
+){
+
+    connectionDot.className =
+        "connection-dot";
+
+    if(type === "green"){
+        connectionDot.classList.add(
+            "green"
+        );
+    }
+
+    if(type === "red"){
+        connectionDot.classList.add(
+            "red"
+        );
+    }
+
+    connectionText.textContent =
+        message;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function setProgress(
+    value,
+    message
+){
+
+    const safe =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Math.round(value)
+            )
+        );
+
+    progressBar.style.width =
+        `${safe}%`;
+
+    progressNumber.textContent =
+        `${safe}%`;
+
+    progressStatus.textContent =
+        message;
+}
+
+
+function resetSteps(){
+
+    for(
+        let i=1;
+        i<=5;
+        i++
+    ){
+
+        const step =
+            document.getElementById(
+                `step${i}`
+            );
+
+        step.classList.remove(
+            "active",
+            "done"
+        );
+
+        step.querySelector(
+            ".step-icon"
+        ).textContent =
+            i;
+    }
+}
+
+
+function setStep(
+    number,
+    stateName
+){
+
+    const step =
+        document.getElementById(
+            `step${number}`
+        );
+
+    step.classList.remove(
+        "active",
+        "done"
+    );
+
+    const icon =
+        step.querySelector(
+            ".step-icon"
+        );
+
+    if(stateName === "active"){
+
+        step.classList.add(
+            "active"
+        );
+
+        icon.textContent =
+            number;
+    }
+
+    if(stateName === "done"){
+
+        step.classList.add(
+            "done"
+        );
+
+        icon.textContent =
+            "✓";
+    }
+}
+
+
+/* =========================================================
+   VERCEL API
+========================================================= */
+
+async function vercelRequest(
+    path,
+    options={}
+){
+
+    if(!state.token){
+
+        throw new Error(
+            "Vercel token belum tersedia."
+        );
+    }
+
+    const response =
+        await fetch(
+            `${VERCEL_API}${path}`,
+            {
+                ...options,
+
+                headers:{
+                    "Authorization":
+                        `Bearer ${state.token}`,
+
+                    "Content-Type":
+                        "application/json",
+
+                    ...(options.headers || {})
+                }
+            }
+        );
+
+    let data = null;
+
+    try{
+
+        data =
+            await response.json();
+
+    }catch{
+
+        data = null;
+    }
+
+    if(!response.ok){
+
+        const message =
+            data?.error?.message ||
+            data?.error?.code ||
+            data?.message ||
+            `HTTP ${response.status}`;
+
+        throw new Error(
+            message
+        );
+    }
+
+    return data;
+}
+
+
+/* =========================================================
+   CONNECT
+========================================================= */
+
+async function connectVercel(){
+
+    const token =
+        tokenInput.value.trim();
+
+    if(!token){
+
+        showToast(
+            "Masukkan Vercel Token.",
+            "error"
+        );
+
+        tokenInput.focus();
+
+        return;
+    }
+
+    connectButton.disabled =
+        true;
+
+    connectButton.textContent =
+        "CONNECTING...";
+
+    setConnection(
+        "",
+        "CONNECTING VERCEL..."
+    );
+
+    try{
+
+        state.token =
+            token;
+
+        addLog(
+            "Connecting to Vercel...",
+            "info"
+        );
+
+        const response =
+            await vercelRequest(
+                "/v2/user",
+                {
+                    method:"GET"
+                }
+            );
+
+        state.user =
+            response.user ||
+            response;
+
+        const username =
+            state.user?.username ||
+            state.user?.name ||
+            state.user?.email ||
+            "VERCEL USER";
+
+        account.textContent =
+            username;
+
+        setConnection(
+            "green",
+            "VERCEL CONNECTED"
+        );
+
+        addLog(
+            `Authenticated as ${username}`,
+            "success"
+        );
+
+        loginScreen.classList.add(
+            "hidden"
+        );
+
+        dashboard.classList.remove(
+            "hidden"
+        );
+
+        projectName.value =
+            `zamzzx-${randomSuffix()}`;
+
+        loadHistory();
+
+        showToast(
+            "Vercel berhasil terhubung.",
+            "success"
+        );
+
+    }catch(error){
+
+        state.token =
+            "";
+
+        state.user =
+            null;
+
+        setConnection(
+            "red",
+            "CONNECTION FAILED"
+        );
+
+        addLog(
+            `Connection failed: ${error.message}`,
+            "error"
+        );
+
+        showToast(
+            `Gagal connect: ${error.message}`,
+            "error"
+        );
+
+    }finally{
+
+        connectButton.disabled =
+            false;
+
+        connectButton.textContent =
+            "CONNECT & MASUK";
+    }
+}
+
+
+/* =========================================================
+   FILE SELECTION
+========================================================= */
+
+function handleFile(
+    file
+){
+
+    if(!file){
+        return;
+    }
+
+    if(
+        file.size >
+        MAX_UPLOAD_SIZE
+    ){
+
+        showToast(
+            `File terlalu besar. Maksimum ${formatBytes(MAX_UPLOAD_SIZE)}.`,
+            "error"
+        );
+
+        return;
+    }
+
+    const name =
+        file.name.toLowerCase();
+
+    const allowed =
+        name.endsWith(".html") ||
+        name.endsWith(".htm") ||
+        name.endsWith(".zip");
+
+    if(!allowed){
+
+        showToast(
+            "Gunakan file HTML, HTM atau ZIP.",
+            "error"
+        );
+
+        return;
+    }
+
+    state.selectedFile =
+        file;
+
+    fileName.textContent =
+        file.name;
+
+    fileSize.textContent =
+        formatBytes(
+            file.size
+        );
+
+    fileInfo.classList.add(
+        "show"
+    );
+
+    if(
+        !projectName.value.trim()
+    ){
+
+        projectName.value =
+            slugify(
+                file.name.replace(
+                    /\.[^.]+$/,
+                    ""
+                )
+            );
+    }
+
+    showToast(
+        `File dipilih: ${file.name}`,
+        "success"
+    );
+}
+
+
+/* =========================================================
+   PROJECT FILE READER
+========================================================= */
+
+async function prepareFiles(){
+
+    if(!state.selectedFile){
+
+        throw new Error(
+            "Belum ada file yang dipilih."
+        );
+    }
+
+    const name =
+        state.selectedFile.name
+            .toLowerCase();
+
+    if(name.endsWith(".zip")){
+
+        return await readZip(
+            state.selectedFile
+        );
+    }
+
+    return [
+        {
+            file:sanitizePath(
+                state.selectedFile.name
+            ),
+
+            data:
+                await fileToBase64(
+                    state.selectedFile
+                )
+        }
+    ];
+}
+
+
+async function fileToBase64(
+    file
+){
+
+    const buffer =
+        await file.arrayBuffer();
+
+    return bytesToBase64(
+        new Uint8Array(buffer)
+    );
+}
+
+
+async function readZip(
+    file
+){
+
+    if(
+        typeof JSZip ===
+        "undefined"
+    ){
+
+        throw new Error(
+            "JSZip belum dimuat. Periksa koneksi internet."
+        );
+    }
+
+    addLog(
+        "Opening ZIP archive...",
+        "info"
+    );
+
+    const buffer =
+        await file.arrayBuffer();
+
+    const zip =
+        await JSZip.loadAsync(
+            buffer
+        );
+
+    const entries =
+        Object.values(
+            zip.files
+        ).filter(
+            item => !item.dir
+        );
+
+    if(!entries.length){
+
+        throw new Error(
+            "ZIP kosong."
+        );
+    }
+
+    if(
+        entries.length >
+        MAX_FILES
+    ){
+
+        throw new Error(
+            `ZIP memiliki ${entries.length} file. Maksimum ${MAX_FILES}.`
+        );
+    }
+
+    const result = [];
+
+    for(
+        const entry of entries
+    ){
+
+        const path =
+            sanitizePath(
+                entry.name
+            );
+
+        if(!path){
+            continue;
+        }
+
+        if(
+            path.startsWith(
+                ".git/"
+            ) ||
+            path.includes(
+                "/.git/"
+            ) ||
+            path.startsWith(
+                "node_modules/"
+            ) ||
+            path.includes(
+                "/node_modules/"
+            )
+        ){
+
+            addLog(
+                `Skipped: ${path}`,
+                "info"
+            );
+
+            continue;
+        }
+
+        const bytes =
+            await entry.async(
+                "uint8array"
+            );
+
+        if(
+            bytes.byteLength >
+            MAX_FILE_SIZE
+        ){
+
+            throw new Error(
+                `${path} terlalu besar.`
+            );
+        }
+
+        result.push({
+            file:path,
+            data:
+                bytesToBase64(
+                    bytes
+                )
+        });
+    }
+
+    if(!result.length){
+
+        throw new Error(
+            "Tidak ada file valid dalam ZIP."
+        );
+    }
+
+    const hasIndex =
+        result.some(
+            item =>
+                item.file
+                    .toLowerCase() ===
+                "index.html"
+        );
+
+    if(!hasIndex){
+
+        if(
+            autoIndex.checked
+        ){
+
+            addLog(
+                "index.html tidak ditemukan.",
+                "info"
+            );
+
+            addLog(
+                "Membuat index.html otomatis.",
+                "info"
+            );
+
+            result.unshift({
+                file:"index.html",
+
+                data:
+                    bytesToBase64(
+                        new TextEncoder()
+                            .encode(
+                                createIndexPage()
+                            )
+                    )
+            });
+
+        }else{
+
+            throw new Error(
+                "index.html tidak ditemukan."
+            );
+        }
+    }
+
+    return result;
+}
+
+
+function sanitizePath(
+    path
+){
+
+    return String(path)
+        .replaceAll(
+            "\\",
+            "/"
+        )
+        .split("/")
+        .filter(
+            part =>
+                part &&
+                part !== "." &&
+                part !== ".."
+        )
+        .join("/");
+}
+
+
+function bytesToBase64(
+    bytes
+){
+
+    let binary = "";
+
+    const chunk =
+        0x8000;
+
+    for(
+        let i=0;
+        i<bytes.length;
+        i+=chunk
+    ){
+
+        binary +=
+            String.fromCharCode(
+                ...bytes.subarray(
+                    i,
+                    Math.min(
+                        i + chunk,
+                        bytes.length
+                    )
+                )
+            );
+    }
+
+    return btoa(
+        binary
+    );
+}
+
+
+/* =========================================================
+   AUTO INDEX
+========================================================= */
+
+function createIndexPage(){
+
+    const name =
+        escapeHtml(
+            projectName.value.trim() ||
+            "Zamzzx Website"
+        );
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${name}</title>
+
+<style>
+html,body{
+    margin:0;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    background:#000;
+    color:#00f5ff;
+    font-family:Arial,sans-serif;
+}
+
+main{
+    text-align:center;
+    padding:30px;
+}
+
+h1{
+    font-size:42px;
+}
+
+p{
+    color:#707778;
+}
+</style>
+</head>
+
+<body>
+
+<main>
+    <h1>${name}</h1>
+    <p>Deployed with Zamzzx Vercel Deployer.</p>
+</main>
+
+</body>
+</html>`;
+}
+
+
+/* =========================================================
+   DEPLOY
+========================================================= */
+
+async function deploy(){
+
+    if(state.deploying){
+        return;
+    }
+
+    if(!state.token){
+
+        showToast(
+            "Vercel belum terhubung.",
+            "error"
+        );
+
+        return;
+    }
+
+    const name =
+        slugify(
+            projectName.value
+        );
+
+    if(!name){
+
+        showToast(
+            "Project Name belum diisi.",
+            "error"
+        );
+
+        projectName.focus();
+
+        return;
+    }
+
+    if(!state.selectedFile){
+
+        showToast(
+            "Pilih file HTML atau ZIP.",
+            "error"
+        );
+
+        return;
+    }
+
+    state.deploying =
+        true;
+
+    deployButton.disabled =
+        true;
+
+    deployButton.textContent =
+        "DEPLOYING...";
+
+    progressPanel.classList.remove(
+        "hidden"
+    );
+
+    resultPanel.classList.add(
+        "hidden"
+    );
+
+    clearLogs();
+
+    resetSteps();
+
+
+    try{
+
+        /* -----------------------------------------------
+           1. PREPARE
+        ------------------------------------------------ */
+
+        setStep(
+            1,
+            "active"
+        );
+
+        setProgress(
+            5,
+            "Preparing project..."
+        );
+
+        addLog(
+            `Project: ${name}`,
+            "info"
+        );
+
+        addLog(
+            `Target: ${deployTarget.value}`,
+            "info"
+        );
+
+        await sleep(350);
+
+        setStep(
+            1,
+            "done"
+        );
+
+
+        /* -----------------------------------------------
+           2. READ FILES
+        ------------------------------------------------ */
+
+        setStep(
+            2,
+            "active"
+        );
+
+        setProgress(
+            18,
+            "Reading project files..."
+        );
+
+        const files =
+            await prepareFiles();
+
+        state.files =
+            files;
+
+        const payloadBytes =
+            files.reduce(
+                (
+                    total,
+                    item
+                ) =>
+                    total +
+                    Math.ceil(
+                        item.data.length *
+                        0.75
+                    ),
+                0
+            );
+
+        addLog(
+            `${files.length} file(s) prepared.`,
+            "success"
+        );
+
+        addLog(
+            `Estimated payload: ${formatBytes(payloadBytes)}`,
+            "info"
+        );
+
+        setProgress(
+            28,
+            "Project ready..."
+        );
+
+        setStep(
+            2,
+            "done"
+        );
+
+
+        /* -----------------------------------------------
+           3. CREATE DEPLOYMENT
+        ------------------------------------------------ */
+
+        setStep(
+            3,
+            "active"
+        );
+
+        setProgress(
+            38,
+            "Uploading to Vercel..."
+        );
+
+        addLog(
+            "Sending deployment request...",
+            "info"
+        );
+
+        const requestBody = {
+            name:name,
+            files:files
+        };
+
+        if(
+            deployTarget.value ===
+            "production"
+        ){
+
+            requestBody.target =
+                "production";
+        }
+
+        if(
+            teamId.value.trim()
+        ){
+
+            requestBody.teamId =
+                teamId.value.trim();
+        }
+
+        const deployment =
+            await vercelRequest(
+                "/v13/deployments",
+                {
+                    method:"POST",
+
+                    body:
+                        JSON.stringify(
+                            requestBody
+                        )
+                }
+            );
+
+        state.deployment =
+            deployment;
+
+        if(
+            !deployment?.id
+        ){
+
+            throw new Error(
+                "Vercel tidak mengembalikan deployment ID."
+            );
+        }
+
+        addLog(
+            `Deployment ID: ${deployment.id}`,
+            "success"
+        );
+
+        setProgress(
+            55,
+            "Deployment created..."
+        );
+
+        setStep(
+            3,
+            "done"
+        );
+
+
+        /* -----------------------------------------------
+           4. WAIT BUILD
+        ------------------------------------------------ */
+
+        setStep(
+            4,
+            "active"
+        );
+
+        addLog(
+            "Waiting for Vercel build...",
+            "info"
+        );
+
+        const finalDeployment =
+            await pollDeployment(
+                deployment.id
+            );
+
+        setStep(
+            4,
+            "done"
+        );
+
+
+        /* -----------------------------------------------
+           5. READY
+        ------------------------------------------------ */
+
+        setStep(
+            5,
+            "active"
+        );
+
+        setProgress(
+            96,
+            "Finalizing..."
+        );
+
+        await sleep(400);
+
+        const url =
+            getDeploymentUrl(
+                finalDeployment
+            );
+
+        if(!url){
+
+            throw new Error(
+                "Deployment selesai tetapi URL tidak ditemukan."
+            );
+        }
+
+        setProgress(
+            100,
+            "Deployment ready."
+        );
+
+        setStep(
+            5,
+            "done"
+        );
+
+        addLog(
+            `READY: ${url}`,
+            "success"
+        );
+
+        showResult(
+            name,
+            url
+        );
+
+        saveHistory(
+            name,
+            url
+        );
+
+        showToast(
+            "Deployment berhasil.",
+            "success"
+        );
+
+    }catch(error){
+
+        addLog(
+            `ERROR: ${error.message}`,
+            "error"
+        );
+
+        progressStatus.textContent =
+            "Deployment failed.";
+
+        showToast(
+            `Deployment gagal: ${error.message}`,
+            "error"
+        );
+
+    }finally{
+
+        state.deploying =
+            false;
+
+        deployButton.disabled =
+            false;
+
+        deployButton.textContent =
+            "DEPLOY SEKARANG";
+    }
+}
+
+
+/* =========================================================
+   POLL DEPLOYMENT
+========================================================= */
+
+async function pollDeployment(
+    deploymentId
+){
+
+    const deadline =
+        Date.now() +
+        10 * 60 * 1000;
+
+    let attempt = 0;
+
+    while(
+        Date.now() <
+        deadline
+    ){
+
+        attempt++;
+
+        const deployment =
+            await vercelRequest(
+                `/v13/deployments/${encodeURIComponent(deploymentId)}`,
+                {
+                    method:"GET"
+                }
+            );
+
+        const stateValue =
+            String(
+                deployment?.readyState ||
+                deployment?.state ||
+                "UNKNOWN"
+            ).toUpperCase();
+
+        addLog(
+            `Build status: ${stateValue}`,
+            stateValue === "READY"
+                ? "success"
+                : "info"
+        );
+
+        if(
+            stateValue ===
+            "READY" ||
+            stateValue ===
+            "COMPLETED"
+        ){
+
+            return deployment;
+        }
+
+        if(
+            stateValue ===
+            "ERROR" ||
+            stateValue ===
+            "CANCELED" ||
+            stateValue ===
+            "CANCELLED"
+        ){
+
+            throw new Error(
+                `Vercel deployment: ${stateValue}`
+            );
+        }
+
+        const progress =
+            Math.min(
+                94,
+                55 +
+                attempt * 3
+            );
+
+        setProgress(
+            progress,
+            `Vercel build: ${stateValue}...`
+        );
+
+        await sleep(
+            attempt < 4
+                ? 1800
+                : 3000
+        );
+    }
+
+    throw new Error(
+        "Timeout menunggu Vercel."
+    );
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+function getDeploymentUrl(
+    deployment
+){
+
+    if(
+        Array.isArray(
+            deployment?.alias
+        )
+    ){
+
+        const alias =
+            deployment.alias.find(
+                item =>
+                    typeof item ===
+                    "string"
+            );
+
+        if(alias){
+
+            return alias.startsWith(
+                "http"
+            )
+                ? alias
+                : `https://${alias}`;
+        }
+    }
+
+    if(
+        deployment?.url
+    ){
+
+        return deployment.url.startsWith(
+            "http"
+        )
+            ? deployment.url
+            : `https://${deployment.url}`;
+    }
+
+    return "";
+}
+
+
+function showResult(
+    name,
+    url
+){
+
+    resultPanel.classList.remove(
+        "hidden"
+    );
+
+    resultPanel.querySelector(
+        ".result-box"
+    ).classList.add(
+        "show"
+    );
+
+    resultUrl.textContent =
+        url;
+
+    resultUrl.href =
+        url;
+
+    openButton.onclick =
+        () => {
+
+            window.open(
+                url,
+                "_blank",
+                "noopener,noreferrer"
+            );
+        };
+
+    copyButton.onclick =
+        async () => {
+
+            try{
+
+                await navigator.clipboard
+                    .writeText(
+                        url
+                    );
+
+                showToast(
+                    "URL berhasil disalin.",
+                    "success"
+                );
+
+            }catch{
+
+                const textarea =
+                    document.createElement(
+                        "textarea"
+                    );
+
+                textarea.value =
+                    url;
+
+                document.body.appendChild(
+                    textarea
+                );
+
+                textarea.select();
+
+                document.execCommand(
+                    "copy"
+                );
+
+                textarea.remove();
+
+                showToast(
+                    "URL berhasil disalin.",
+                    "success"
+                );
+            }
+        };
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function getHistory(){
+
+    try{
+
+        const raw =
+            localStorage.getItem(
+                HISTORY_KEY
+            );
+
+        if(!raw){
+            return [];
+        }
+
+        const parsed =
+            JSON.parse(
+                raw
+            );
+
+        return Array.isArray(
+            parsed
+        )
+            ? parsed
+            : [];
+
+    }catch{
+
+        return [];
+    }
+}
+
+
+function saveHistory(
+    name,
+    url
+){
+
+    const items =
+        getHistory();
+
+    items.unshift({
+        name:name,
+        url:url,
+        time:
+            new Date()
+                .toISOString()
+    });
+
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(
+            items.slice(
+                0,
+                15
+            )
+        )
+    );
+
+    renderHistory();
+}
+
+
+function loadHistory(){
+
+    renderHistory();
+}
+
+
+function renderHistory(){
+
+    const items =
+        getHistory();
+
+    history.innerHTML =
+        "";
+
+    if(!items.length){
+
+        history.innerHTML =
+            `<div class="history-empty">
+                Belum ada deployment.
+            </div>`;
+
+        return;
+    }
+
+    for(
+        const item of items
+    ){
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+        row.className =
+            "history-item";
+
+        const date =
+            new Date(
+                item.time
+            );
+
+        row.innerHTML = `
+            <div class="history-project">
+                ${escapeHtml(item.name)}
+            </div>
+
+            <div class="history-url">
+                ${escapeHtml(item.url)}
+            </div>
+
+            <div class="history-time">
+                ${escapeHtml(
+                    date.toLocaleString(
+                        "id-ID"
+                    )
+                )}
+            </div>
+        `;
+
+        row.addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    item.url,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+            }
+        );
+
+        history.appendChild(
+            row
+        );
+    }
+}
+
+
+/* =========================================================
+   DISCONNECT
+========================================================= */
+
+function disconnect(){
+
+    state.token =
+        "";
+
+    state.user =
+        null;
+
+    state.selectedFile =
+        null;
+
+    state.files =
+        [];
+
+    state.deployment =
+        null;
+
+    tokenInput.value =
+        "";
+
+    fileInput.value =
+        "";
+
+    fileInfo.classList.remove(
+        "show"
+    );
+
+    progressPanel.classList.add(
+        "hidden"
+    );
+
+    resultPanel.classList.add(
+        "hidden"
+    );
+
+    clearLogs();
+
+    setConnection(
+        "",
+        "VERCEL DISCONNECTED"
+    );
+
+    dashboard.classList.add(
+        "hidden"
+    );
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+    showToast(
+        "Vercel disconnected.",
+        "success"
+    );
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+tokenToggle.addEventListener(
+    "click",
+    () => {
+
+        const visible =
+            tokenInput.type ===
+            "text";
+
+        tokenInput.type =
+            visible
+                ? "password"
+                : "text";
+
+        tokenToggle.textContent =
+            visible
+                ? "◉"
+                : "◎";
+    }
+);
+
+
+connectButton.addEventListener(
+    "click",
+    connectVercel
+);
+
+
+tokenInput.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key ===
+            "Enter"
+        ){
+
+            connectVercel();
+        }
+    }
+);
+
+
+chooseButton.addEventListener(
+    "click",
+    () => {
+
+        fileInput.click();
+    }
+);
+
+
+fileInput.addEventListener(
+    "change",
+    event => {
+
+        const file =
+            event.target
+                .files?.[0];
+
+        handleFile(
+            file
+        );
+    }
+);
+
+
+dropzone.addEventListener(
+    "dragover",
+    event => {
+
+        event.preventDefault();
+
+        dropzone.classList.add(
+            "dragging"
+        );
+    }
+);
+
+
+dropzone.addEventListener(
+    "dragleave",
+    () => {
+
+        dropzone.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+dropzone.addEventListener(
+    "drop",
+    event => {
+
+        event.preventDefault();
+
+        dropzone.classList.remove(
+            "dragging"
+        );
+
+        const file =
+            event.dataTransfer
+                .files?.[0];
+
+        handleFile(
+            file
+        );
+    }
+);
+
+
+deployButton.addEventListener(
+    "click",
+    deploy
+);
+
+
+disconnectButton.addEventListener(
+    "click",
+    disconnect
+);
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+setConnection(
+    "",
+    "VERCEL DISCONNECTED"
+);
+
+renderHistory();
+
+</script>
+
+</body>
+</html>
